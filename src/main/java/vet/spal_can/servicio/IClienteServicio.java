@@ -5,11 +5,11 @@ import vet.spal_can.modelo.Cliente;
 
 public interface IClienteServicio {
     
-    public List<Cliente> listarCliente();
+    List<Cliente> listar();
     
-    public Cliente buscarClientePorId(Integer id);
+    Cliente buscarPorId(Integer id);
     
-    public void guardarCliente(Cliente cliente);
+    void guardar(Cliente cliente);
     
-    public void eliminarCliente(Cliente cliente);
+    void eliminar(Cliente cliente);
 }

@@ -13,25 +13,23 @@ public class ClienteServicio implements IClienteServicio {
     private ClienteRepositorio clienteRepositorio;
 
     @Override
-    public List<Cliente> listarCliente() {
-        //Gracias a la interface "clienteRepositorio" podemos crear un objeto de ella y llamar al metodo "findall" de la interface JpaRepository
-        List<Cliente> clientes = clienteRepositorio.findAll();
-        return clientes;
+    public List<Cliente> listar() {
+        
+        return clienteRepositorio.findAll();
     }
 
     @Override
-    public Cliente buscarClientePorId(Integer id) {
-        Cliente cliente = clienteRepositorio.findById(id).orElse(null); //buscará en la BD a los clientes por el ID
-        return cliente;
+    public Cliente buscarPorId(Integer id) {
+        return clienteRepositorio.findById(id).orElse(null); 
     }
 
     @Override
-    public void guardarCliente(Cliente cliente) {
-        clienteRepositorio.save(cliente); //ese metodo se fijará si el ID es null o no, si lo es, hara un insert, de lo contrarios un update
+    public void guardar(Cliente cliente) {
+        clienteRepositorio.save(cliente); 
     }
 
     @Override
-    public void eliminarCliente(Cliente cliente) {
+    public void eliminar(Cliente cliente) {
         clienteRepositorio.delete(cliente);
     }
     

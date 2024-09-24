@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Data //Crea todos los metodos Get y Set
-@NoArgsConstructor //Crea el constructor vacio
-@AllArgsConstructor //Crea el constructor con todos los paremetros
-@ToString //Metodo ToString
+@Data 
+@NoArgsConstructor 
+@AllArgsConstructor 
+@ToString 
 public class Cliente {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //para datos incrementales como el ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private Integer id;
     private String nombre;
     private String apellido;
@@ -28,7 +28,6 @@ public class Cliente {
     
 
 
-    //Comstructor de 6 parametros sin del ID
     public Cliente(String nombre, String apellido, String nombreAnimal, String especie, String raza, String genero){
         this.nombre = nombre;
         this.apellido = apellido;

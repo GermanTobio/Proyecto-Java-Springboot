@@ -17,13 +17,12 @@ public class SpalCanApplication implements CommandLineRunner {
     @Autowired
     private IClienteServicio clienteServicio;
 
-    private static final Logger logger = LoggerFactory.getLogger(SpalCanApplication.class); //Crea un Log de la clase
+    private static final Logger logger = LoggerFactory.getLogger(SpalCanApplication.class);
 
     public static void main(String[] args) {
 
         logger.info("Iniciando la aplicación");
 
-        //Spring llama al método run
         SpringApplication.run(SpalCanApplication.class, args);
 
         logger.info("Cerrando la aplicación");
@@ -37,15 +36,12 @@ public class SpalCanApplication implements CommandLineRunner {
         Scanner teclado = new Scanner(System.in);
         boolean salir = false;
 
-        //Bucle "While" para salir de la app en cuanto la condición cambie
         while (!salir) {
 
             try {
 
-                //Metodo que mostrará el menú de la App con sus opciones
                 int opcion = mostrarMenu(teclado);
 
-                //Metodo que ejecutará una opción desplegada en el menú de la app
                 salir = ejecutarOpcion(opcion, teclado);
 
             } catch (Exception e) {
@@ -54,10 +50,8 @@ public class SpalCanApplication implements CommandLineRunner {
         }
     }
 
-    //Método para desplegar el menú de la app
     public int mostrarMenu(Scanner teclado) {
 
-        //Creamos esta variable para depositar el la opcion que haya elegido el usuario
         int opcion = 0;
 
         logger.info("""
@@ -80,7 +74,6 @@ public class SpalCanApplication implements CommandLineRunner {
 
         boolean salir = false;
 
-        //inicializamos las variables que utilizaremos.
         int id = 0;
         String nombre = "";
         String apellido = "";
@@ -90,23 +83,20 @@ public class SpalCanApplication implements CommandLineRunner {
         String nombreAnimal = "";
 
         switch (opcion) {
-            case 1: //Crear lista de clientes
+            case 1:
                 logger.info("--- Listado de clientes ---");
-                List<Cliente> clientes = clienteServicio.listarCliente();
+                List<Cliente> clientes = clienteServicio.listar();
                 clientes.forEach(cliente -> logger.info(cliente.toString()));
                 break;
 
-            case 2: //Buscar un cliente por el ID
+            case 2: 
                 logger.info("--- buscar cliente por ID ---");
 
                 logger.info("Proporcione un ID: ");
                 id = Integer.parseInt(teclado.nextLine());
 
-                //Creamos un objeto de tipo Cliente e invocamos al método "buscarClientePorId"
-                Cliente cliente = clienteServicio.buscarClientePorId(id);
+                Cliente cliente = clienteServicio.buscarPorId(id);
 
-                //Si es distinto de nulo, osea si encontró información del cliente con el ID pasado se le mostrará un mensaje
-                //de encontrádo. Si la información encontrada es null se le devolverá el mensaje de no encontrado.
                 if (cliente != null) {
                     logger.info("Cliente encontrado: " + cliente + "\n");
                 } else {
@@ -114,7 +104,7 @@ public class SpalCanApplication implements CommandLineRunner {
                 }
                 break;
 
-            case 3: //Agregar un cliente nuevo a la BD
+            case 3: 
                 logger.info("--- Agregar un cliente nuevo ---");
 
                 logger.info("Nombre:\s");
@@ -135,33 +125,25 @@ public class SpalCanApplication implements CommandLineRunner {
                 logger.info("Genero:\s");
                 genero = teclado.nextLine();
 
-                //Creamos un objeto de tipo Cliente y llamo al constructor de 6 parámetros.
                 Cliente nuevoCliente = new Cliente(nombre, apellido, nombreAnimal, especie, raza, genero);
 
-                //Con el método guardarCliente guardamos la nueva información que le pasamos con el objeto "nuevoCliente" en la BD.
-                clienteServicio.guardarCliente(nuevoCliente);
+                clienteServicio.guardar(nuevoCliente);
 
                 logger.info("Cliente agregado: " + nuevoCliente);
                 break;
 
-            case 4: //Modificación de datos de clientes 
+            case 4:  
                 logger.info("--- Modificar datos cliente ---");
 
-                //le pedimos al usuario el ID del cliente que quiere modificar.
                 logger.info("Proporcione un ID del cliente a modificar:\s");
                 id = Integer.parseInt(teclado.nextLine());
 
                 Cliente modificarCliente = new Cliente();
 
-                //Con el método "bucarClientePorId" sabremos si ese cliente esta en la BD o no
-                //si está, proseguiremos a editar sus datos
-                modificarCliente = clienteServicio.buscarClientePorId(id);
+                modificarCliente = clienteServicio.buscarPorId(id);
 
-                //Si el cliente es distinto de null, osea que con la busqueda por ID encontró información
-                //modificaremos los datos del cliente encontrado.
                 if (modificarCliente != null) {
 
-                    //pedimos al usuario todos los datos a modificar del cliente.
                     logger.info("Nombre:\s");
                     nombre = teclado.nextLine();
 
@@ -180,7 +162,6 @@ public class SpalCanApplication implements CommandLineRunner {
                     logger.info("Genero:\s");
                     genero = teclado.nextLine();
 
-                    //Con el método Set vamos modificando todos los atributos del objeto
                     modificarCliente.setNombre(nombre);
                     modificarCliente.setApellido(apellido);
                     modificarCliente.setNombreAnimal(nombreAnimal);
@@ -188,7 +169,7 @@ public class SpalCanApplication implements CommandLineRunner {
                     modificarCliente.setRaza(raza);
                     modificarCliente.setGenero(genero);
 
-                    clienteServicio.guardarCliente(modificarCliente);
+                    clienteServicio.guardar(modificarCliente);
 
                     logger.info("Cliente modificado: " + modificarCliente);
 
@@ -197,20 +178,16 @@ public class SpalCanApplication implements CommandLineRunner {
                 }
                 break;
 
-            case 5: //Eliminación de un cliente de la BD.
+            case 5: 
                 logger.info("--- Eliminar cliente ---");
 
-                //Pedimos al usuario el ID del cliente a eliminar.
                 logger.info("Proporcione el ID del cliente a eliminar:");
                 id = Integer.parseInt(teclado.nextLine());
 
-                //El ID proporcionado se lo pasamos al método "buscarClientePorId".
-                Cliente eliminarCliente = clienteServicio.buscarClientePorId(id);
+                Cliente eliminarCliente = clienteServicio.buscarPorId(id);
 
-                //Si el cliente que buscamos por ID no es null invocamos el metodo "eliminarCliente"
-                //para borrarlo de la base de datos.
                 if (eliminarCliente != null) {
-                    clienteServicio.eliminarCliente(eliminarCliente);
+                    clienteServicio.eliminar(eliminarCliente);
 
                     logger.info("Cliente eliminado: " + eliminarCliente);
                 } else {
@@ -218,17 +195,15 @@ public class SpalCanApplication implements CommandLineRunner {
                 }
                 break;
 
-            case 6: //Opción para salir de la App.
+            case 6:
                 logger.info("¡Hasta pronto!");
                 salir = true;
                 break;
 
-            default: //Opción por si el usuario proporciona una opción no válida.
+            default:
                 logger.info("Opción inválida: " + opcion);
         }
         
-        //Al finalizar este método devuelve la variable booleana "salir", si devuelve "true" saldrá de la app
-        //si devuelve "false" volverá a mostrar el menú de la app para seguir eligiendo opciones.
         return salir;
     }
 
